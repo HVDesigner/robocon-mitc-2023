@@ -1,3 +1,23 @@
+@font-face {
+  font-family: "Anton";
+  src: url("./assets/Anton-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Kanit-Bold";
+  src: url("./assets/Kanit-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Kanit-SemiBold";
+  src: url("./assets/Kanit-SemiBold.ttf");
+}
+
+body {
+  overflow: hidden;
+  user-select: none;
+}
+
 .App {
   text-align: center;
 }
