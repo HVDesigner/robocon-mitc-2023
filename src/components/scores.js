@@ -1,6 +1,7 @@
 import React from "react";
+import { ref, onValue } from "firebase/database";
 
-function Scores({ title = "Kết quả" }) {
+function Scores({ title = "Kết quả", database }) {
   return (
     <React.Fragment>
       <h1
@@ -9,7 +10,7 @@ function Scores({ title = "Kết quả" }) {
       >
         {title}
       </h1>
-      <div className="h-100 position-relative">
+      <div className="h-100 position-relative overflow-auto">
         <table className="table table-striped">
           <thead>
             <tr>

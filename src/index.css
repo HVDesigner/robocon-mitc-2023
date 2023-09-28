@@ -1,13 +1,19 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "Anton";
+  src: url("./assets/Anton-Regular.ttf");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: "Kanit-Bold";
+  src: url("./assets/Kanit-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Kanit-SemiBold";
+  src: url("./assets/Kanit-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "Kanit-Medium";
+  src: url("./assets/Kanit-Medium.ttf");
 }

@@ -5,7 +5,7 @@ import ChuanBi from "./components/chuanbi";
 import ThiDau from "./components/thidau";
 import Scores from "./components/scores";
 
-function App() {
+function App({ database }) {
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === "1") {
@@ -41,7 +41,7 @@ function App() {
         <Progress now="50%" />
       </Layout>
       <Layout id="ketthuc">
-        <Scores />
+        <Scores database={database} />
         <Progress now="100%" />
       </Layout>
     </div>
