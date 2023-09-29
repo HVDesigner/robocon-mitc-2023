@@ -1,7 +1,24 @@
 import React from "react";
-import { ref, onValue } from "firebase/database";
+// import { ref, onValue } from "firebase/database";
 
 function Scores({ title = "Kết quả", database }) {
+  // React.useEffect(() => {
+  //   const starCountRef = ref(database, "tran-dau");
+
+  //   onValue(starCountRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     console.log(snapshot);
+  //     // let x = [];
+  //     // for (const key in data) {
+  //     //   if (Object.hasOwnProperty.call(data, key)) {
+  //     //     const element = data[key];
+  //     //     x = [...x, { id: key, name: element }];
+  //     //   }
+  //     // }
+  //   });
+  // }, [database]);
+
+
   return (
     <React.Fragment>
       <h1
