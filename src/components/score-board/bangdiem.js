@@ -3,6 +3,8 @@ import NavBar from "./navbar";
 import { ref, onValue, set, update } from "firebase/database";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function BangDiem({ database }) {
   const [hasMatch, setHasMatch] = useState(false);
@@ -56,6 +58,7 @@ function BangDiem({ database }) {
           mission2: { history: {}, point: 0 },
           mission3: { history: {}, point: 0 },
           mission4: { history: {}, point: 0 },
+          VOR: { history: {}, point: 0 },
           name: e.target.blue.value,
         },
         "red-team": {
@@ -63,15 +66,37 @@ function BangDiem({ database }) {
           mission2: { history: {}, point: 0 },
           mission3: { history: {}, point: 0 },
           mission4: { history: {}, point: 0 },
+          VOR: { history: {}, point: 0 },
           name: e.target.red.value,
         },
       });
     }
   };
 
+  const onMatchDone = (p) => {
+    let x = Date.now();
+
+    update(ref(database), {
+      [`tran-dau`]: null,
+      [`lich-su-tran-dau/${x}/status`]: "done",
+      [`lich-su-tran-dau/${x}/match`]: match,
+      [`tran-dau-gan-day`]: match,
+    });
+  };
+
+  const onRemoveMatch = () => {
+    let x = Date.now();
+
+    update(ref(database), {
+      [`tran-dau`]: null,
+      [`lich-su-tran-dau/${x}/status`]: "remove",
+      [`lich-su-tran-dau/${x}/match`]: match,
+    });
+  };
+
   return (
     <React.Fragment>
-      <div className="d-flex mt-3">
+      <div className="d-flex gap-2 mt-3 pe-3">
         <NavBar />
         <h1
           style={{ fontFamily: "Anton" }}
@@ -79,9 +104,21 @@ function BangDiem({ database }) {
         >
           Bảng điểm
         </h1>
+        {loadMatch ? (
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        ) : hasMatch ? (
+          <React.Fragment>
+            <RemoveMatch onRemoveMatch={onRemoveMatch} />
+            <MatchDone onMatchDone={onMatchDone} />
+          </React.Fragment>
+        ) : (
+          ""
+        )}
       </div>
-      <div className="h-100 p-2">
-        <div className="border rounded-3 border-2 h-100 p-3 bg-white">
+      <div className="h-100 p-2 overflow-auto">
+        <div className="border rounded-3 border-2 h-100 p-3 bg-white overflow-auto">
           {loadMatch ? (
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
@@ -187,16 +224,16 @@ function BangDiem({ database }) {
                     <th className="text-nowrap">Phạm quy</th>
                     <td>
                       <ViolationOfRules
-                        point={match["blue-team"].mission4.point}
-                        history={match["blue-team"].mission4.history}
+                        point={match["blue-team"].VOR.point}
+                        history={match["blue-team"].VOR.history}
                         team={"blue-team"}
                         database={database}
                       />
                     </td>
                     <td>
                       <ViolationOfRules
-                        point={match["red-team"].mission4.point}
-                        history={match["red-team"].mission4.history}
+                        point={match["red-team"].VOR.point}
+                        history={match["red-team"].VOR.history}
                         team={"red-team"}
                         database={database}
                       />
@@ -209,7 +246,8 @@ function BangDiem({ database }) {
                         {match["blue-team"].mission1.point +
                           match["blue-team"].mission2.point +
                           match["blue-team"].mission3.point +
-                          match["blue-team"].mission4.point}
+                          match["blue-team"].mission4.point +
+                          match["blue-team"].VOR.point}
                       </p>
                     </td>
                     <td>
@@ -217,7 +255,8 @@ function BangDiem({ database }) {
                         {match["red-team"].mission1.point +
                           match["red-team"].mission2.point +
                           match["red-team"].mission3.point +
-                          match["red-team"].mission4.point}
+                          match["red-team"].mission4.point +
+                          match["red-team"].VOR.point}
                       </p>
                     </td>
                   </tr>
@@ -306,10 +345,12 @@ function Mission1Point({ point = 0, history = {}, team = "", database }) {
   }, [history]);
 
   const onClickPoint = () => {
+    let x = Date.now();
+
     update(ref(database), {
       [`tran-dau/${team}/mission1/point`]: parseInt(point) + 10,
-      [`tran-dau/${team}/mission1/history/${Date.now()}/point`]: 10,
-      [`tran-dau/${team}/mission1/history/${Date.now()}/status`]: "active",
+      [`tran-dau/${team}/mission1/history/${x}/point`]: 10,
+      [`tran-dau/${team}/mission1/history/${x}/status`]: "active",
     });
   };
 
@@ -377,10 +418,12 @@ function Mission2Point({ point = 0, history = {}, team = "", database }) {
   }, [history]);
 
   const onClickPoint = () => {
+    let x = Date.now();
+
     update(ref(database), {
       [`tran-dau/${team}/mission2/point`]: parseInt(point) + 15,
-      [`tran-dau/${team}/mission2/history/${Date.now()}/point`]: 15,
-      [`tran-dau/${team}/mission2/history/${Date.now()}/status`]: "active",
+      [`tran-dau/${team}/mission2/history/${x}/point`]: 15,
+      [`tran-dau/${team}/mission2/history/${x}/status`]: "active",
     });
   };
 
@@ -448,11 +491,13 @@ function Mission3Point({ point = 0, history = {}, team = "", database }) {
   }, [history]);
 
   const onClickPoint = (type, p) => {
+    let x = Date.now();
+
     update(ref(database), {
       [`tran-dau/${team}/mission3/point`]: p,
-      [`tran-dau/${team}/mission3/history/${Date.now()}/point`]: 15,
-      [`tran-dau/${team}/mission3/history/${Date.now()}/status`]: "active",
-      [`tran-dau/${team}/mission3/history/${Date.now()}/type`]: type,
+      [`tran-dau/${team}/mission3/history/${x}/point`]: 15,
+      [`tran-dau/${team}/mission3/history/${x}/status`]: "active",
+      [`tran-dau/${team}/mission3/history/${x}/type`]: type,
     });
   };
 
@@ -522,11 +567,13 @@ function Mission4Point({ point = 0, history = {}, team = "", database }) {
   }, [history]);
 
   const onClickPoint = (type, p) => {
+    let x = Date.now();
+
     update(ref(database), {
       [`tran-dau/${team}/mission4/point`]: p,
-      [`tran-dau/${team}/mission4/history/${Date.now()}/point`]: p,
-      [`tran-dau/${team}/mission4/history/${Date.now()}/status`]: "active",
-      [`tran-dau/${team}/mission4/history/${Date.now()}/type`]: type,
+      [`tran-dau/${team}/mission4/history/${x}/point`]: p,
+      [`tran-dau/${team}/mission4/history/${x}/status`]: "active",
+      [`tran-dau/${team}/mission4/history/${x}/type`]: type,
     });
   };
 
@@ -594,19 +641,20 @@ function ViolationOfRules({ point = 0, history = {}, team = "", database }) {
     setHistoryList(x);
   }, [history]);
 
-  const onClickPoint = (type, p) => {
+  const onClickPoint = (p) => {
+    let x = Date.now();
+
     update(ref(database), {
-      [`tran-dau/${team}/mission4/point`]: p,
-      [`tran-dau/${team}/mission4/history/${Date.now()}/point`]: p,
-      [`tran-dau/${team}/mission4/history/${Date.now()}/status`]: "active",
-      [`tran-dau/${team}/mission4/history/${Date.now()}/type`]: type,
+      [`tran-dau/${team}/VOR/point`]: parseInt(point) + parseInt(p),
+      [`tran-dau/${team}/VOR/history/${x}/point`]: p,
+      [`tran-dau/${team}/VOR/history/${x}/status`]: "active",
     });
   };
 
-  const onRemovePoint = (id, type) => {
+  const onRemovePoint = (id, p) => {
     update(ref(database), {
-      [`tran-dau/${team}/mission4/point`]: 0,
-      [`tran-dau/${team}/mission4/history/${id}/status`]: "remove",
+      [`tran-dau/${team}/VOR/point`]: parseInt(point) - parseInt(p),
+      [`tran-dau/${team}/VOR/history/${id}/status`]: "remove",
     });
   };
 
@@ -618,13 +666,11 @@ function ViolationOfRules({ point = 0, history = {}, team = "", database }) {
           {historyList.map((v) => (
             <span
               key={v.id}
-              className={`badge rounded-pill text-uppercase text-bg-${
-                v.type === "winner" ? "warning" : "success"
-              } mt-2`}
+              className={`badge rounded-pill text-uppercase text-bg-danger mt-2`}
               role="button"
-              onClick={() => onRemovePoint(v.id, v.type)}
+              onClick={() => onRemovePoint(v.id, v.point)}
             >
-              {`${v.type === "winner" ? "Ra khơi" : `+${v.point}`}`}
+              {v.point}
             </span>
           ))}
         </div>
@@ -634,19 +680,99 @@ function ViolationOfRules({ point = 0, history = {}, team = "", database }) {
         <span
           className="badge rounded-pill text-bg-danger"
           role="button"
-          onClick={() => onClickPoint("", 15)}
+          onClick={() => onClickPoint(-5)}
         >
           -5
         </span>
         <span
           className="badge rounded-pill text-bg-danger"
           role="button"
-          onClick={() => onClickPoint("", 15)}
+          onClick={() => onClickPoint(-10)}
         >
           -10
         </span>
       </div>
     </div>
+  );
+}
+
+function RemoveMatch({ onRemoveMatch = () => {} }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <React.Fragment>
+      <div
+        className="border border-2 rounded bg-white d-flex align-items-center ps-3 pe-3 fw-semibold text-muted text-truncate"
+        role="button"
+        onClick={() => setShow(true)}
+      >
+        <small>Hủy trận</small>
+      </div>
+      <Modal
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={show}
+        onHide={() => setShow(false)}
+        contentClassName="border-0"
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body className="bg-light">
+          <p className="mb-0">Bạn thực sự muốn hủy trận đấu ?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={onRemoveMatch}
+            className="fw-semibold"
+            variant="secondary"
+          >
+            Có
+          </Button>
+          <Button onClick={() => setShow(false)} className="fw-semibold">
+            Không
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </React.Fragment>
+  );
+}
+
+function MatchDone({ onMatchDone = () => {} }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <React.Fragment>
+      <div
+        className="border border-2 border-success rounded bg-white d-flex align-items-center ps-3 pe-3 fw-semibold text-success text-truncate"
+        role="button"
+        onClick={() => setShow(true)}
+      >
+        <small>Kết thúc</small>
+      </div>
+      <Modal
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={show}
+        onHide={() => setShow(false)}
+        contentClassName="border-0"
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body className="bg-light">
+          <p className="mb-0">Trận đấu đã kết thúc chưa ?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={onMatchDone}
+            className="fw-semibold"
+            variant="secondary"
+          >
+            Rồi
+          </Button>
+          <Button onClick={() => setShow(false)} className="fw-semibold">
+            Chưa
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </React.Fragment>
   );
 }
 

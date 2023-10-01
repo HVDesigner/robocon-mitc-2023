@@ -37,7 +37,7 @@ function App({ database }) {
         <Progress />
       </Layout>
       <Layout id="thidau">
-        <ThiDau />
+        <ThiDau database={database} />
         <Progress now="50%" />
       </Layout>
       <Layout id="ketthuc">
@@ -50,7 +50,11 @@ function App({ database }) {
 
 function Layout({ children, id = "chuanbi" }) {
   return (
-    <div id={id} className="d-flex flex-column" style={{ height: "100vh" }}>
+    <div
+      id={id}
+      className="d-flex flex-column overflow-auto"
+      style={{ maxHeight: "100vh", height: "100vh" }}
+    >
       {children}
     </div>
   );

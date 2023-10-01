@@ -27,7 +27,7 @@ function Scores({ title = "Kết quả", database }) {
       >
         {title}
       </h1>
-      <div className="h-100 position-relative overflow-auto">
+      <div className="h-100 position-relative">
         <table className="table table-striped">
           <thead>
             <tr>
