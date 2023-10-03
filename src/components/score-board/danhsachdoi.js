@@ -7,6 +7,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 function DanhSachDoi({ database }) {
   const [list, setList] = useState([]);
+  const [listHide, setListHide] = useState([]);
   const [rawList, setRawList] = useState({});
   const [onLoading, setOnLoading] = useState(true);
 
@@ -15,14 +16,23 @@ function DanhSachDoi({ database }) {
 
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
-      let x = [];
+
       setRawList(data);
+
+      let x = [],
+        y = [];
+
       for (const key in data) {
         if (Object.hasOwnProperty.call(data, key)) {
           const element = data[key];
-          x = [...x, { id: key, name: element }];
+          if (element.status === "active") {
+            x = [...x, { id: key, ...element }];
+          } else {
+            y = [...y, { id: key, ...element }];
+          }
         }
       }
+      setListHide(y);
       setList(x);
       setOnLoading(false);
     });
@@ -34,7 +44,10 @@ function DanhSachDoi({ database }) {
     if (e.target.teamName.value.trim() !== "") {
       set(ref(database, "danh-sach-cac-doi"), {
         ...rawList,
-        [Date.now()]: e.target.teamName.value.trim(),
+        [Date.now()]: {
+          name: e.target.teamName.value.trim(),
+          status: "active",
+        },
       }).then(() => {
         e.target.teamName.value = "";
       });
@@ -77,22 +90,67 @@ function DanhSachDoi({ database }) {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th></th>
+                    <th>#</th>
                     <th className="w-100">Tên đội</th>
+                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((v, k) => (
-                    <tr key={v.id}>
-                      <th className="text-nowrap">{k + 1}</th>
-                      <TeamNameItem
-                        name={v.name}
-                        id={v.id}
-                        database={database}
-                      />
+                  {list.length === 0 ? (
+                    <tr>
+                      <th colSpan={4} className="text-center">
+                        <span className="fw-semibold text-muted">
+                          Chưa có đội nào
+                        </span>
+                      </th>
                     </tr>
-                  ))}
+                  ) : (
+                    list.map((v, k) => (
+                      <tr key={v.id}>
+                        <th className="text-nowrap">{k + 1}</th>
+                        <TeamNameItem
+                          name={v.name}
+                          id={v.id}
+                          database={database}
+                        />
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th className="w-100">Tên đội đã ẩn</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listHide.length === 0 ? (
+                    <tr>
+                      <th colSpan={4} className="text-center">
+                        <span className="fw-semibold text-muted">
+                          Chưa có đội nào
+                        </span>
+                      </th>
+                    </tr>
+                  ) : (
+                    listHide.map((v, k) => (
+                      <tr key={v.id}>
+                        <th className="text-nowrap">{k + 1}</th>
+                        <TeamNameItem
+                          name={v.name}
+                          id={v.id}
+                          database={database}
+                          type="hide"
+                        />
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </React.Fragment>
@@ -103,22 +161,34 @@ function DanhSachDoi({ database }) {
   );
 }
 
-function TeamNameItem({ name, database, id }) {
+function TeamNameItem({ name, database, id, type = "active" }) {
   const [isChange, setIsChange] = React.useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
     update(ref(database), {
-      [`/danh-sach-cac-doi/${id}`]: e.target.newTeamName.value.trim(),
+      [`/danh-sach-cac-doi/${id}/name`]: e.target.newTeamName.value.trim(),
     }).then(() => {
       setIsChange(false);
+    });
+  };
+
+  const onHide = () => {
+    update(ref(database), {
+      [`/danh-sach-cac-doi/${id}/status`]:
+        type === "active" ? "hide" : "active",
     });
   };
 
   return (
     <React.Fragment>
       <td>{name}</td>
+      <td>
+        <small className="text-muted" role="button" onClick={() => onHide()}>
+          {type === "active" ? "ẩn" : "hiện"}
+        </small>
+      </td>
       <td className="text-nowrap text-end">
         <small
           className="text-muted"

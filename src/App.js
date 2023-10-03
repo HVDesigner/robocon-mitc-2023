@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import Progress from "./components/progress";
 import ChuanBi from "./components/chuanbi";
 import ThiDau from "./components/thidau";
 import Scores from "./components/scores";
@@ -34,15 +33,12 @@ function App({ database }) {
     >
       <Layout id="chuanbi">
         <ChuanBi title="Thời gian chuẩn bị" />
-        <Progress />
       </Layout>
       <Layout id="thidau">
         <ThiDau database={database} />
-        <Progress now="50%" />
       </Layout>
       <Layout id="ketthuc">
         <Scores database={database} />
-        <Progress now="100%" />
       </Layout>
     </div>
   );

@@ -15,13 +15,13 @@ function Navbar() {
       >
         Danh sách các đội
       </a>
-      <a
+      {/* <a
         className="text-muted link-offset-2 link-underline link-underline-opacity-0 text-truncate"
         href="#lich-su"
         style={{ fontFamily: "Kanit-Medium" }}
       >
         Lịch sử
-      </a>
+      </a> */}
     </div>
   );
 }

@@ -24,7 +24,9 @@ function BangDiem({ database }) {
       for (const key in data) {
         if (Object.hasOwnProperty.call(data, key)) {
           const element = data[key];
-          x = [...x, { id: key, name: element }];
+          if (element.status === "active") {
+            x = [...x, { ...element, id: key }];
+          }
         }
       }
       setTeams(x);
@@ -327,23 +329,21 @@ function BangDiem({ database }) {
   );
 }
 
-function Mission1Point({ point = 0, history = {}, team = "", database }) {
-  const [historyList, setHistoryList] = useState([]);
+function convertToArr(data) {
+  let x = [];
+  for (const key in data) {
+    if (Object.hasOwnProperty.call(data, key)) {
+      const element = data[key];
 
-  React.useEffect(() => {
-    let x = [];
-    for (const key in history) {
-      if (Object.hasOwnProperty.call(history, key)) {
-        const element = history[key];
-
-        if (element.status === "active") {
-          x = [...x, { ...element, id: key }];
-        }
+      if (element.status === "active") {
+        x = [...x, { ...element, id: key }];
       }
     }
-    setHistoryList(x);
-  }, [history]);
+  }
+  return x;
+}
 
+function Mission1Point({ point = 0, history = {}, team = "", database }) {
   const onClickPoint = () => {
     let x = Date.now();
 
@@ -366,7 +366,7 @@ function Mission1Point({ point = 0, history = {}, team = "", database }) {
       <div>
         <p className="text-center mb-0 fw-semibold">{point}</p>
         <div className="d-flex align-items-center gap-1">
-          {historyList.map((v) => (
+          {convertToArr(history).map((v) => (
             <span
               key={v.id}
               className="badge rounded-pill text-bg-success mt-2"
@@ -380,12 +380,12 @@ function Mission1Point({ point = 0, history = {}, team = "", database }) {
       </div>
       <div
         className={`border-start border-secondary border-3 ${
-          historyList.length >= 3 ? "d-none" : ""
+          convertToArr(history).length >= 3 ? "d-none" : ""
         }`}
       ></div>
       <div
         className={`d-flex align-items-center gap-1 ${
-          historyList.length >= 3 ? "d-none" : ""
+          convertToArr(history).length >= 3 ? "d-none" : ""
         }`}
       >
         <span
@@ -401,22 +401,6 @@ function Mission1Point({ point = 0, history = {}, team = "", database }) {
 }
 
 function Mission2Point({ point = 0, history = {}, team = "", database }) {
-  const [historyList, setHistoryList] = useState([]);
-
-  React.useEffect(() => {
-    let x = [];
-    for (const key in history) {
-      if (Object.hasOwnProperty.call(history, key)) {
-        const element = history[key];
-
-        if (element.status === "active") {
-          x = [...x, { ...element, id: key }];
-        }
-      }
-    }
-    setHistoryList(x);
-  }, [history]);
-
   const onClickPoint = () => {
     let x = Date.now();
 
@@ -439,7 +423,7 @@ function Mission2Point({ point = 0, history = {}, team = "", database }) {
       <div>
         <p className="text-center mb-0 fw-semibold">{point}</p>
         <div className="d-flex align-items-center gap-1">
-          {historyList.map((v) => (
+          {convertToArr(history).map((v) => (
             <span
               key={v.id}
               className="badge rounded-pill text-bg-success mt-2"
@@ -453,12 +437,12 @@ function Mission2Point({ point = 0, history = {}, team = "", database }) {
       </div>
       <div
         className={`border-start border-secondary border-3 ${
-          historyList.length >= 3 ? "d-none" : ""
+          convertToArr(history).length >= 3 ? "d-none" : ""
         }`}
       ></div>
       <div
         className={`d-flex align-items-center gap-1 ${
-          historyList.length >= 3 ? "d-none" : ""
+          convertToArr(history).length >= 3 ? "d-none" : ""
         }`}
       >
         <span
@@ -474,22 +458,6 @@ function Mission2Point({ point = 0, history = {}, team = "", database }) {
 }
 
 function Mission3Point({ point = 0, history = {}, team = "", database }) {
-  const [historyList, setHistoryList] = useState([]);
-
-  React.useEffect(() => {
-    let x = [];
-    for (const key in history) {
-      if (Object.hasOwnProperty.call(history, key)) {
-        const element = history[key];
-
-        if (element.status === "active") {
-          x = [...x, { ...element, id: key }];
-        }
-      }
-    }
-    setHistoryList(x);
-  }, [history]);
-
   const onClickPoint = (type, p) => {
     let x = Date.now();
 
@@ -514,7 +482,7 @@ function Mission3Point({ point = 0, history = {}, team = "", database }) {
       <div>
         <p className="text-center mb-0 fw-semibold">{point}</p>
         <div className="d-flex align-items-center gap-1">
-          {historyList.map((v) => (
+          {convertToArr(history).map((v) => (
             <span
               key={v.id}
               className={`badge rounded-pill text-bg-${
@@ -550,22 +518,6 @@ function Mission3Point({ point = 0, history = {}, team = "", database }) {
 }
 
 function Mission4Point({ point = 0, history = {}, team = "", database }) {
-  const [historyList, setHistoryList] = useState([]);
-
-  React.useEffect(() => {
-    let x = [];
-    for (const key in history) {
-      if (Object.hasOwnProperty.call(history, key)) {
-        const element = history[key];
-
-        if (element.status === "active") {
-          x = [...x, { ...element, id: key }];
-        }
-      }
-    }
-    setHistoryList(x);
-  }, [history]);
-
   const onClickPoint = (type, p) => {
     let x = Date.now();
 
@@ -589,7 +541,7 @@ function Mission4Point({ point = 0, history = {}, team = "", database }) {
       <div>
         <p className="text-center mb-0 fw-semibold">{point}</p>
         <div className="d-flex align-items-center gap-1">
-          {historyList.map((v) => (
+          {convertToArr(history).map((v) => (
             <span
               key={v.id}
               className={`badge rounded-pill text-uppercase text-bg-${
@@ -625,22 +577,6 @@ function Mission4Point({ point = 0, history = {}, team = "", database }) {
 }
 
 function ViolationOfRules({ point = 0, history = {}, team = "", database }) {
-  const [historyList, setHistoryList] = useState([]);
-
-  React.useEffect(() => {
-    let x = [];
-    for (const key in history) {
-      if (Object.hasOwnProperty.call(history, key)) {
-        const element = history[key];
-
-        if (element.status === "active") {
-          x = [...x, { ...element, id: key }];
-        }
-      }
-    }
-    setHistoryList(x);
-  }, [history]);
-
   const onClickPoint = (p) => {
     let x = Date.now();
 
@@ -663,7 +599,7 @@ function ViolationOfRules({ point = 0, history = {}, team = "", database }) {
       <div>
         <p className="text-center mb-0 fw-semibold">{point}</p>
         <div className="d-flex align-items-center gap-1">
-          {historyList.map((v) => (
+          {convertToArr(history).map((v) => (
             <span
               key={v.id}
               className={`badge rounded-pill text-uppercase text-bg-danger mt-2`}
