@@ -107,9 +107,11 @@ function BangDiem({ database }) {
           Bảng điểm
         </h1>
         {loadMatch ? (
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
         ) : hasMatch ? (
           <React.Fragment>
             <RemoveMatch onRemoveMatch={onRemoveMatch} />
@@ -122,9 +124,11 @@ function BangDiem({ database }) {
       <div className="h-100 p-2 overflow-auto">
         <div className="border rounded-3 border-2 h-100 p-3 bg-white overflow-auto">
           {loadMatch ? (
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <div className="d-flex justify-content-center align-items-center h-100">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
           ) : hasMatch ? (
             <React.Fragment>
               <table className="table table-striped">
@@ -279,9 +283,11 @@ function BangDiem({ database }) {
                     Đội xanh
                   </h3>
                   {loadTeam ? (
-                    <Spinner animation="border" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
                   ) : (
                     <Form.Select style={{ boxShadow: "none" }} name="blue">
                       <option value={""}>Chọn đội xanh</option>

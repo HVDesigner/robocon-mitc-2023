@@ -14,7 +14,7 @@ function ScoreBoard({ database }) {
         <DanhSachCacDoi database={database} />
       </Layout>
       <Layout id="lich-su">
-        <LichSu />
+        <LichSu database={database} />
       </Layout>
     </React.Fragment>
   );

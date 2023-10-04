@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import ScoreBoard from "./ScoreBoard";
-import AuthLayout from "./Auth";
+import { Spinner } from "react-bootstrap";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "moment/locale/vi";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -13,6 +13,9 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
+
+const ScoreBoard = React.lazy(() => import("./ScoreBoard"));
+const AuthLayout = React.lazy(() => import("./Auth"));
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -35,28 +38,41 @@ const auth = getAuth(app);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/">
-          <Route
-            index
-            element={
-              <AuthLayout auth={auth}>
-                <App database={database} />
-              </AuthLayout>
-            }
-          />
-          <Route
-            path="score-board"
-            element={
-              <AuthLayout auth={auth}>
-                <ScoreBoard database={database} />
-              </AuthLayout>
-            }
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Suspense
+      fallback={
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "100vh", width: "100vw" }}
+        >
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      }
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route
+              index
+              element={
+                <AuthLayout auth={auth}>
+                  <App database={database} />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="score-board"
+              element={
+                <AuthLayout auth={auth}>
+                  <ScoreBoard database={database} />
+                </AuthLayout>
+              }
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Suspense>
   </React.StrictMode>
 );
 

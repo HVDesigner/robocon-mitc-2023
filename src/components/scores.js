@@ -4,9 +4,9 @@ import Logo from "./../assets/images/logo.png";
 import Progress from "./progress";
 
 function Scores({ title = "Kết quả", database }) {
-  const [match, setMatch] = React.useState({});
-  const [loadMatch, setLoadMatch] = React.useState(true);
-  const [hasMatch, setHasMatch] = React.useState(false);
+  const [match, setMatch] = React.useState({}),
+    [loadMatch, setLoadMatch] = React.useState(true),
+    [hasMatch, setHasMatch] = React.useState(false);
 
   React.useEffect(() => {
     const indexRef = ref(database, "tran-dau-gan-day");
@@ -21,7 +21,10 @@ function Scores({ title = "Kết quả", database }) {
 
   return (
     <div className="overflow-auto h-100">
-      <table className="table mb-0" style={{ height: "100vh" }}>
+      <table
+        className="table h-100 overflow-auto mb-0"
+        style={{ height: "100vh" }}
+      >
         <tbody>
           <tr>
             <td

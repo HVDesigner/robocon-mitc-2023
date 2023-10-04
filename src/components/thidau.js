@@ -142,8 +142,8 @@ function Top({ database, title = "" }) {
   if (loading) {
     return (
       <tr>
-        <td colSpan={3}>
-          <div className="d-flex justify-content-center p-3">
+        <td colSpan={3} className="border-3 border-dark">
+          <div className="d-flex justify-content-center align-items-center p-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>

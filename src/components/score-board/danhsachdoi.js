@@ -68,9 +68,11 @@ function DanhSachDoi({ database }) {
       <div className="h-100 p-2 flex-fill overflow-auto">
         <div className="border rounded-3 border-2 h-100 p-3 overflow-auto bg-white">
           {onLoading ? (
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <div className="d-flex justify-content-center align-items-center h-100">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
           ) : (
             <React.Fragment>
               <form onSubmit={onSubmit}>

@@ -20,9 +20,11 @@ function AuthLayout({ children, auth }) {
 
   if (loading) {
     return (
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh", width: "100vw" }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
     );
   }
 
